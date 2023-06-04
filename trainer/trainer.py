@@ -596,7 +596,9 @@ class DiffIRInference(BaseTrainer):
                     cv2.imwrite(str(self.process_img_path / "{}_process.jpg".format(name[i])), tensor2img(out_process[i]))
                 print(name[i])
 
-            torch.cuda.empty_cache()
+            # prevent potential memory leak
+            if k % 10 == 0:
+                torch.cuda.empty_cache()
 
     @torch.no_grad()
     def prepare_data(self, data):

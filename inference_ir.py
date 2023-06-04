@@ -3,7 +3,7 @@ import os
 from omegaconf import OmegaConf
 
 # debug only
-os.environ['CUDA_VISIBLE_DEVICES'] = "0"
+# os.environ['CUDA_VISIBLE_DEVICES'] = "0"
 
 import torch
 from trainer.trainer import DiffIRInference
