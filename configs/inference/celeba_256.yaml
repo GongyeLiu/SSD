@@ -1,0 +1,26 @@
+diffusion:
+  cfg_path: configs/guided_diffusion/diffusion_celeba_256.yaml
+  resume_path: pretrained_ckpt/celeba_hq.ckpt
+
+
+sample:
+  use_ddim: true
+  ddim_eta: 0.8
+  img_size: 256
+  inject_feature: [output_0_attn, output_1_attn, output_2_attn]
+  # inject_feature: []
+
+
+datasets:
+  test:
+    target: trainer.dataset.Dataset.ImageDataset
+    params:
+      gt_root: data_demo/dataset/celeba/*.png
+      # gt_root: /mnt/data/lgy22/celeba_test/crop_256_256/*.png
+      img_size: 256
+
+
+dataloader:
+  test:
+    batch_size: 1
+    num_workers: 1

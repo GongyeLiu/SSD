@@ -1,0 +1,35 @@
+diffusion:
+  target: guided_diffusion.script_util.create_gaussian_diffusion
+  params:
+    steps: 1000
+    learn_sigma: True
+    sigma_small: False
+    noise_schedule: linear
+    use_kl: False
+    predict_xstart: False
+    rescale_timesteps: False
+    rescale_learned_sigmas: True
+    timestep_respacing: 50
+
+
+model:
+  target: guided_diffusion.unet.UNetModel
+  params:
+    image_size: 256
+    in_channels: 3
+    model_channels: 256
+    out_channels: 6
+    attention_resolutions: [8, 16, 32]
+    dropout: 0
+    channel_mult: [1, 1, 2, 2, 4, 4]
+    num_res_blocks: 2
+    conv_resample: True
+    dims: 2
+    num_head_channels: 64
+    num_heads_upsample: 4
+    use_scale_shift_norm: True
+    resblock_updown: True
+    use_new_attention_order: False
+    num_classes: 1000
+
+

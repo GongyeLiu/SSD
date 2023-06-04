@@ -1,0 +1,20 @@
+model:
+  target: guided_diffusion.unet_ori.EncoderUNetModel
+  params:
+    image_size: 256
+    in_channels: 3
+    model_channels: 128
+    out_channels: 1000
+    num_res_blocks: 2
+    attention_resolutions: [32, 16, 8]
+    dropout: 0
+    channel_mult: [1, 1, 2, 2, 4, 4]
+    conv_resample: True
+    dims: 2
+    num_head_channels: 64
+    num_heads_upsample: 4
+    use_scale_shift_norm: True
+    resblock_updown: True
+    use_new_attention_order: False
+    pool: attention
+

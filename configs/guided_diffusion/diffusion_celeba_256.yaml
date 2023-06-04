@@ -1,0 +1,29 @@
+diffusion:
+  target: guided_diffusion.script_util.create_forward_backward_diffusion
+  params:
+    steps: 1000
+    learn_sigma: True
+    sigma_small: False
+    noise_schedule: linear
+    use_kl: False
+    predict_xstart: False
+    rescale_timesteps: False
+    rescale_learned_sigmas: True
+    forward_timestep: 50
+    backward_timestep: 50
+    insert_step: 600
+
+
+model:
+  target: guided_diffusion.model.Model
+  params:
+    ch: 128
+    out_ch: 3
+    ch_mult: [1, 1, 2, 2, 4, 4]
+    num_res_blocks: 2
+    attn_resolutions: [16, ]
+    dropout: 0.0
+    in_channels: 3
+    image_size: 256
+    resamp_with_conv: True
+

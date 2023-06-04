@@ -1,0 +1,11 @@
+h5py==3.6.0
+lpips==0.1.4
+numpy==1.21.5
+omegaconf==2.3.0
+opencv_python==4.7.0.68
+Pillow==9.0.1
+scikit_image==0.19.2
+scipy==1.7.3
+torch==1.9.0+cu111
+torchvision==0.10.0+cu111
+tqdm==4.64.0
