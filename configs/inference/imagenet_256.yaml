@@ -2,33 +2,19 @@ diffusion:
   cfg_path: configs/guided_diffusion/diffusion_uncond_256.yaml
   resume_path: pretrained_ckpt/256x256_diffusion_uncond.pt
 
-#  cfg_path: configs/guided_diffusion/diffusion_cond_256.yaml
-#  resume_path: /home/lgy/MyCode/Diff-BSR/pretrained/256x256_diffusion.pt
-
-#classifier:
-#  cfg_path: configs/guided_diffusion/classifier_256.yaml
-#  resume_path: /home/lgy/MyCode/Diff-BSR/pretrained/256x256_classifier.pt
-
-
 sample:
   use_ddim: true
   ddim_eta: 0.8
   img_size: 256
-  # inject_feature: []
-  # inject_feature: ['output_4_fea', 'output_5_fea', 'output_6_fea', 'output_7_fea', 'output_8_fea', 'output_9_fea']
-  inject_feature: ['output_1_attn', 'output_2_attn', 'output_3_attn', 'output_4_attn',
-                   'output_5_attn', 'output_6_attn', 'output_7_attn', 'output_8_attn', 'output_9_attn'
-                  ]
 
 
 datasets:
   test:
     target: trainer.dataset.Dataset.ImageDataset
     params:
-      # gt_root: data_demo/dataset/imagenet/*.JPEG
-      gt_root: /mnt/data/lgy22/imagenet/*.JPEG
+      gt_root: data_demo/dataset/imagenet/*.JPEG
       img_size: 256
-
+      mask_root: ~
 
 dataloader:
   test:

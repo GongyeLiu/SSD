@@ -1,15 +1,18 @@
 # SSD: Accelerating Diffusion Models for Inverse Problems through Shortcut Sampling
-Official implementation of "Accelerating Diffusion Models for Inverse Problems through Shortcut Sampling"
+Official implementation of IJCAI 2024 paper [Accelerating Diffusion Models for Inverse Problems through Shortcut Sampling](https://arxiv.org/abs/2305.16965)
 
-
-## 📖[**Paper**](https://arxiv.org/abs/2305.16965)
+![img.png](figures/method.png)
 
 TL;DR: We propose Shortcut Sampling for Diffusion (SSD), a novel pipeline for solving inverse problems in a zero-shot manner. Compared to state-of-the-art
 zero-shot methods, our method achieves competitive results with only 30 NFEs.
 
+## 📖 Showcases
+
 ![img.png](figures/result_celeba.png)
 
 [//]: # (![img.png]&#40;FID_vs_NFEs/img.png&#41;)
+
+![img.png](figures/result_celeba_noisy.png)
 
 ## Getting Started
 
@@ -42,7 +45,7 @@ export CUDA_VISIBLE_DEVICES=0
 # 4x SR
 python inference_ir.py --exp_name celeba_sr_bicubic_4
 # 8x SR
-python inference_ir.py --factor 8. --exp_name celeba_sr_bicubic_8
+python inference_ir.py --def_factor 8. --exp_name celeba_sr_bicubic_8
 # colorization
 python inference_ir.py --degradation colorization --insert_step 750 --noise_eta 0.8 --exp_name celeba_colorization
 # deblur
@@ -57,11 +60,10 @@ Details of parameters are provided as follows:
 * `forward_timestep`: The number of forward(inversion) steps in the diffusion process.
 * `backward_timestep`: The number of backward(generation) steps in the diffusion process.
 * `insert_step`: Shortcut time-step t0 in diffusion.
-* `aligned_timestep`: Steps of attention injection.
+* `stop_consistency_timestep`: Stop using consistency time-step(only for SSD+).
 * `noise_eta`: Proportion of added disturbance. (default: `0.8` for colorization, `0.4` for other tasks).
-* `use_consistency`: Whether to use back-projection. (default: `True`).
 * `degradation`: Degradation type. Available options: `deblur_gauss`, `colorization`, `sr_bicubic`, `sr_average`.
-* `factor`: Scale factor of degradation. (only useful for sr tasks).
+* `deg_factor`: Scale factor of degradation.
 * `exp_name`: Experiment name.
 * `cfg_path`: Path of config file. (`./configs/inference/celeba_256.yaml` for face images, `./configs/inference/imagenet_256.yaml` for nature images).
 * `save_dir`: Path of output folder.
@@ -96,7 +98,7 @@ We use PSNR, SSIM, FID and LPIPS to evaluate the results. If you have problems i
 If you find this repo useful for your research, please consider citing the paper
 
 ```
-@article{liu2021accelerating,
+@article{liu2023accelerating,
   title={Accelerating Diffusion Models for Inverse Problems through Shortcut Sampling},
   author={Gongye Liu and Haoze Sun and Jiayi Li and Fei Yin and Yujiu Yang},
   journal={arXiv preprint arXiv:2305.16965},

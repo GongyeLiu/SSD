@@ -7,6 +7,7 @@ import h5py
 import cv2
 import glob
 from PIL import Image
+import torch
 
 
 def imread(img_path):
@@ -78,18 +79,30 @@ class CenterCropLongEdge(object):
 
 
 class ImageDataset(Dataset):
-    def __init__(self, gt_root, img_size=128):
+    def __init__(self, gt_root, img_size=128, mask_root=None):
         self.gt_path = sorted(glob.glob(gt_root))
         self.transform = transforms.Compose([
             CenterCropLongEdge(),
             transforms.Resize(img_size),
             transforms.ToTensor()
         ])
+        if mask_root is not None:
+            self.mask_path = sorted(glob.glob(mask_root))
+            assert len(self.mask_path) == len(self.gt_path)
+        else:
+            self.mask_path = None
+        print(f'Found {len(self.gt_path)} images in {gt_root}')
 
     def __getitem__(self, item):
         name = self.gt_path[item].split('/')[-1].split('.')[0]
         gt = imread_PIL(self.gt_path[item])
         gt = self.transform(gt)
+
+        if self.mask_path is not None:
+            mask = np.load(self.mask_path[item])
+            mask = torch.from_numpy(mask).unsqueeze(0)
+            return {'gt': gt, 'mask': mask, 'name': name}
+
         return {'gt': gt, 'name': name}
 
     def __len__(self):

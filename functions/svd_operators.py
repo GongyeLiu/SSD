@@ -749,7 +749,13 @@ class WalshAadamardCS(A_functions):
         a = a.reshape(vec.shape[0], self.channels, self.img_dim**2) / self.img_dim
         return a
 
-    def __init__(self, channels, img_dim, ratio, perm, device):
+    def __init__(self, channels, img_dim, ratio, perm):
+        print("WalshAadamardCS")
+        print("channels:", channels)
+        print("img_dim:", img_dim)
+        print("ratio:", ratio)
+        print("perm:", perm)
+        device = 'cuda'
         self.channels = channels
         self.img_dim = img_dim
         self.ratio = ratio

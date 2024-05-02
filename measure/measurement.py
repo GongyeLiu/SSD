@@ -3,7 +3,7 @@ from functools import partial
 from measure.resize_right import resize
 from measure import interp_methods
 
-from functions.svd_operators import SRConv, Colorization, Deblurring
+from functions.svd_operators import SRConv, Colorization, Deblurring, WalshAadamardCS
 
 import numpy as np
 import torch
@@ -142,6 +142,60 @@ class DeblurGaussOperator(LinearOperator):
         out = self.A_funcs.A(x).view(x.shape[0], self.channels, self.img_size, self.img_size)
         return out
 
+    def transpose(self, x):
+        out = self.A_funcs.A_pinv(x).view(x.shape[0], self.channels, self.img_size, self.img_size)
+        return out
+    
+
+class MaskedOperator(LinearOperator):
+    def __init__(self, type='random_point', mask_size=[128, 128], mask_prob=0.5, img_size=256):
+        self.type = type
+        self.mask_size = mask_size
+        self.mask_prob = mask_prob
+        self.img_size = img_size
+        self.mask_img = None
+
+    def get_mask(self):
+        if self.type == 'random_point':
+            mask = torch.rand(1, 1, self.img_size, self.img_size) > self.mask_prob
+            mask = mask.float().cuda()
+        elif self.type == 'random_block':
+            mask = torch.ones(1, 1, self.img_size, self.img_size)
+            lt_point = torch.randint(0, self.img_size - self.mask_size[0], (1, 2))
+            mask[:, :, lt_point[0, 0]:lt_point[0, 0] + self.mask_size[0], lt_point[0, 1]:lt_point[0, 1] + self.mask_size[1]] = 0
+        elif self.type == "specific":
+            mask = self.mask
+        return mask
+    
+    def register_mask(self, mask):
+        self.mask = mask
+
+    def forward(self, x, mask=None):
+        if mask is None:
+            mask = self.get_mask()
+
+        return x * mask        
+
+    def transpose(self, x, mask=None):
+        if mask is None:
+            mask = self.get_mask()
+        return x * mask
+    
+
+class WalshAadamardCSOperator(LinearOperator):
+    def __init__(self, channels=3, img_size=256, ratio=0.25):
+        with torch.random.fork_rng():
+            torch.manual_seed(42)
+            random_permutation = torch.randperm(img_size ** 2, device='cuda')
+        A_funcs = WalshAadamardCS(channels, img_size, round(1 / ratio), random_permutation)
+        self.A_funcs = A_funcs
+        self.img_size = img_size
+        self.channels = channels
+
+    def forward(self, x):
+        out = self.A_funcs.A(x)
+        return out
+    
     def transpose(self, x):
         out = self.A_funcs.A_pinv(x).view(x.shape[0], self.channels, self.img_size, self.img_size)
         return out

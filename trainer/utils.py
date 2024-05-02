@@ -7,6 +7,19 @@ from skimage.metrics import peak_signal_noise_ratio as psnr_calc
 import importlib
 
 
+def get_jpeger(device):
+    from basicsr.utils import DiffJPEG
+    return DiffJPEG(differentiable=False).to(device)
+
+def rand(min=0, max=1, shape=None):
+    if shape is None:
+        noise = torch.rand(1) * (max - min) + min
+    else:
+        noise = torch.rand(shape) * (max - min) + min
+    
+    return noise
+
+
 def setup_seed(seed):
     torch.manual_seed(seed)
     torch.cuda.manual_seed_all(seed)

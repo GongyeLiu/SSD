@@ -190,7 +190,7 @@ class DDIMSampler(object):
             (t != 0).float().view(-1, *([1] * (len(x.shape) - 1)))
         )  # no noise when t == 0
         sample = mean_pred + nonzero_mask * sigma * noise
-        return {"sample": sample, "pred_xstart": x_0_pred}
+        return {"sample": sample, "pred_xstart": x_0_pred, 'noise': eps}
 
     def p_sample_guidance(self, img_guidance, x, t, s=5.0, use_ddim=False):
 
